@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String      @id @default(cuid())
+  email     String      @unique
+  name      String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  watchlist Watchlist[]
+}
+
+model Stock {
+  ticker             String              @id
+  companyName        String
+  exchange           String?
+  sector             String?
+  industry           String?
+  marketCap          BigInt?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  priceBars          PriceBar[]
+  financialSnapshots FinancialSnapshot[]
+  analyses           CompanyAnalysis[]
+  watchlistEntries   Watchlist[]
+}
+
+model PriceBar {
+  id        String   @id @default(cuid())
+  ticker    String
+  interval  String
+  timestamp DateTime
+  open      Decimal  @db.Decimal(18, 6)
+  high      Decimal  @db.Decimal(18, 6)
+  low       Decimal  @db.Decimal(18, 6)
+  close     Decimal  @db.Decimal(18, 6)
+  volume    BigInt?
+  createdAt DateTime @default(now())
+  stock     Stock    @relation(fields: [ticker], references: [ticker], onDelete: Cascade)
+
+  @@unique([ticker, interval, timestamp])
+  @@index([ticker, interval, timestamp])
+}
+
+model FinancialSnapshot {
+  id              String   @id @default(cuid())
+  ticker          String
+  period          String
+  fiscalDate      DateTime?
+  revenue         Decimal? @db.Decimal(20, 2)
+  grossMargin     Decimal? @db.Decimal(10, 6)
+  operatingMargin Decimal? @db.Decimal(10, 6)
+  netIncome       Decimal? @db.Decimal(20, 2)
+  eps             Decimal? @db.Decimal(18, 6)
+  freeCashFlow    Decimal? @db.Decimal(20, 2)
+  debt            Decimal? @db.Decimal(20, 2)
+  cash            Decimal? @db.Decimal(20, 2)
+  source          String?
+  sourceDate      DateTime?
+  raw             Json?
+  createdAt       DateTime @default(now())
+  stock           Stock    @relation(fields: [ticker], references: [ticker], onDelete: Cascade)
+
+  @@unique([ticker, period, fiscalDate])
+  @@index([ticker, period])
+}
+
+model CompanyAnalysis {
+  id                 String   @id @default(cuid())
+  ticker             String
+  generatedAt        DateTime @default(now())
+  dataAsOf           DateTime?
+  sourceSnapshotIds  String[] @default([])
+  summary            String
+  thesis             String
+  businessOverview   String
+  businessModel      String
+  financialAnalysis  String
+  growthDrivers      String
+  partners           String
+  strengths          String
+  risks              String
+  peers              Json
+  watchMetrics       Json
+  missingData        Json
+  sourceEvidence     Json
+  stock              Stock    @relation(fields: [ticker], references: [ticker], onDelete: Cascade)
+
+  @@index([ticker, generatedAt])
+}
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  ticker    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock     Stock    @relation(fields: [ticker], references: [ticker], onDelete: Cascade)
+
+  @@unique([userId, ticker])
+  @@index([userId, createdAt])
+}
+
