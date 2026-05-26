@@ -1,7 +1,9 @@
 # Project
+
 Next.js 15 App Router (TypeScript). Main Stack: React, Tailwind CSS, Prisma, PostgresSQL, Redis.
 
 ## Project Structure & Module Organization
+
 - src/app/: Pages, layout and route handlers.
 - src/app/stocks/[ticker]/: Stock pages.
 - src/app/api/: API.
@@ -17,17 +19,20 @@ Next.js 15 App Router (TypeScript). Main Stack: React, Tailwind CSS, Prisma, Pos
 - test/: Tets by Vitest.
 
 # Rule
+
 - Do not call the DB directly from anywhere other than src/app/api/. DB access is possible through src/lib/db.ts.
 - Do not read or modify .env or .env.local files.
 - Attach `user client` only to necessary components. The default is Server Component.
 - Do not edit `package-lock.json` directly. Update it only with `npm install`.
 
 # Build and Test (Completion Criteria)
+
 After modifying the code, execute the following in order before saying it is complete:
-1. npm run typecheck  # Check TypeScript type errors 
+
+1. npm run typecheck # Check TypeScript type errors
 2. npm run lint # Check ESLint warnings
 3. npm run test # Check tests
-3. npm run build # Check if the production build was successful
+4. npm run build # Check if the production build was successful
 
 ## Coding Style & Naming Conventions
 
