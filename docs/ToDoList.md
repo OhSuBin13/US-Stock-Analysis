@@ -7,6 +7,8 @@
 
 ## Complete
 
+- FMP provider API migration: replaced legacy `/api/v3` and `/api/v4` paths with current `/stable` endpoints and added response mapping tests.
+
 - Next.js App Router 기본 구조 구성: 홈, 종목 상세, watchlist, API route 골격.
 - Tailwind/shadcn 스타일 UI primitive 구성: button, input, card, badge, cn() 유틸.
 - Prisma 데이터 모델 초안 작성: User, Stock, PriceBar, FinancialSnapshot, CompanyAnalysis, Watchlist.
